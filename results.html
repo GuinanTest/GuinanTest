@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试结果 - 答题系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .final-score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #4CAF50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: scoreReveal 1s ease-out;
+        }
+
+        @keyframes scoreReveal {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.5); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 6px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .result-icon {
+            font-size: 3em;
+            margin-right: 20px;
+        }
+
+        .result-title {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .result-description {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .traits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .trait {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-top: 3px solid;
+        }
+
+        .special-states {
+            margin: 30px 0;
+        }
+
+        .special-states h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .state-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .state-icon {
+            font-size: 2em;
+            margin-right: 20px;
+        }
+
+        .state-info {
+            flex: 1;
+        }
+
+        .state-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .state-description {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .state-bonus {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .score-breakdown {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 4px solid #2196f3;
+        }
+
+        .score-breakdown h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            padding-top: 20px;
+            border-top: 2px solid #2196f3;
+        }
+
+        .buttons-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ff7043 0%, #f4511e 100%);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+
+            .final-score {
+                font-size: 3em;
+            }
+
+            .result-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .result-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .traits-container {
+                grid-template-columns: 1fr;
+            }
+
+            .state-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .state-icon {
+                margin: 0 0 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="resultTitle">🏆 测试结果</h1>
+        </div>
+
+        <div class="main-content">
+            <div id="loadingContainer" class="loading">
+                <div>🔄 正在分析结果...</div>
+            </div>
+
+            <div id="resultContainer" class="hidden">
+                <div class="result-header">
+                    <div class="final-score" id="finalScore">0</div>
+                    <p>你的最终得分</p>
+                </div>
+
+                <div id="resultCard" class="result-card">
+                    <!-- 主要结果类型将在这里显示 -->
+                </div>
+
+                <div id="specialStates" class="special-states hidden">
+                    <h3>🎯 特殊标识</h3>
+                    <div id="statesContainer">
+                        <!-- 特殊状态将在这里显示 -->
+                    </div>
+                </div>
+
+                <div class="score-breakdown">
+                    <h3>📊 得分详情</h3>
+                    <div id="scoreBreakdown">
+                        <!-- 得分明细将在这里显示 -->
+                    </div>
+                </div>
+
+                <div class="buttons-container">
+                    <a href="quiz.html" class="btn btn-primary">🔄 重新测试</a>
+                    <a href="instructions.html" class="btn btn-secondary">📋 查看说明</a>
+                    <a href="index.html" class="btn btn-warning">🏠 返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="results.js"></script>
+    <script>
+        let testScore = 0;
+        let userAnswers = [];
+        let sigma = 0;
+        let firstsin = 0;
+
+        // 初始化结果页面
+        function initResults() {
+            // 从 localStorage 获取测试数据
+            const storedScore = localStorage.getItem('testScore');
+            const storedAnswers = localStorage.getItem('userAnswers');
+            const endingType = localStorage.getItem('endingType');
+            const storedSigma = localStorage.getItem('sigma');
+            const storedFirstsin = localStorage.getItem('firstsin');
+
+            if (storedScore === null) {
+                document.getElementById('loadingContainer').innerHTML = `
+                    <div>
+                        <h3>❌ 没有找到测试结果</h3>
+                        <p>请先完成测试</p>
+                        <a href="quiz.html" class="btn btn-primary">开始测试</a>
+                    </div>
+                `;
+                return;
+            }
+
+            testScore = parseInt(storedScore);
+            userAnswers = storedAnswers ? JSON.parse(storedAnswers) : [];
+            sigma = parseInt(storedSigma) || 0;
+            firstsin = parseInt(storedFirstsin) || 0;
+
+            displayResults(endingType || 'default');
+        }
+
+        // 显示结果
+        function displayResults(endingType = 'default') {
+            document.getElementById('loadingContainer').classList.add('hidden');
+            document.getElementById('resultContainer').classList.remove('hidden');
+
+            // 显示最终得分
+            document.getElementById('finalScore').textContent = testScore.toLocaleString('zh-CN') + '￥';
+
+            // 根据结局类型显示不同内容
+            displayEndingResult(endingType);
+
+            // 分析特殊状态
+            const specialStatesFound = analyzeSpecialStates();
+            if (specialStatesFound.length > 0) {
+                displaySpecialStates(specialStatesFound);
+            }
+
+            // 显示得分详情
+            displayScoreBreakdown();
+        }
+
+        // 显示不同结局的结果
+        function displayEndingResult(endingType) {
+            const endingData = getEndingData(endingType);
+            const card = document.getElementById('resultCard');
+            card.style.borderLeftColor = endingData.color;
+
+            // 更新页面标题
+            document.getElementById('resultTitle').textContent = endingData.titleIcon + ' ' + endingData.name;
+            document.title = endingData.name + ' - 答题系统';
+
+            card.innerHTML = `
+                <div class="result-header">
+                    <div class="result-icon">${endingData.icon}</div>
+                    <div class="result-title" style="color: ${endingData.color};">${endingData.name}</div>
+                </div>
+                <div class="result-description">${endingData.description}</div>
+                <div class="traits-container">
+                    ${endingData.traits.map(trait => `
+                        <div class="trait" style="border-top-color: ${endingData.color};">
+                            ${trait}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // 获取结局数据
+        function getEndingData(endingType) {
+            const endings = {
+                'default': {
+                    name: '普通结局',
+                    titleIcon: '🏆',
+                    description: '你完成了所有题目，获得了基础的彩礼价格。虽然结果平平，但这是一个不错的开始！',
+                    icon: '💰',
+                    color: '#4CAF50',
+                    traits: ['完成测试', '表现正常', '有待提升', '继续努力']
+                },
+                'guiman': {
+                    name: '龟男结局',
+                    titleIcon: '🐢',
+                    description: '恭喜！你达到了传说中的龟男境界！在某些特殊领域表现出了独特的...天赋。你的彩礼价格因为这种特殊属性而发生了戏剧性的变化。',
+                    icon: '🐢',
+                    color: '#FF5722',
+                    traits: ['特殊天赋', '独特视角', '需要反思', '另辟蹊径']
+                },
+                'sigma': {
+                    name: 'Sigma结局',
+                    titleIcon: '💪',
+                    description: '你是真正的Sigma男性！独立自主，不随波逐流，有着自己独特的人生哲学和价值观。作为真正的Sigma，你不需要任何彩礼来证明自己的价值 - 你的存在本身就是无价的！',
+                    icon: '💪',
+                    color: '#9C27B0',
+                    traits: ['独立思考', '自主决策', '领导气质', 'Sigma特质']
+                }
+            };
+
+            return endings[endingType] || endings['default'];
+        }
+
+        // 分析特殊状态
+        function analyzeSpecialStates() {
+            const foundStates = [];
+            const stateCount = {};
+
+            // 统计各种状态
+            userAnswers.forEach(answer => {
+                if (answer.state && answer.state !== 0) {
+                    if (stateCount[answer.state]) {
+                        stateCount[answer.state]++;
+                    } else {
+                        stateCount[answer.state] = 1;
+                    }
+                }
+            });
+
+            // 确定主要状态
+            for (const [stateKey, count] of Object.entries(stateCount)) {
+                if (specialStates[stateKey]) {
+                    foundStates.push({
+                        key: stateKey,
+                        count: count,
+                        ...specialStates[stateKey]
+                    });
+                }
+            }
+
+            return foundStates;
+        }
+
+        // 显示特殊状态
+        function displaySpecialStates(states) {
+            const container = document.getElementById('statesContainer');
+            const specialSection = document.getElementById('specialStates');
+
+            container.innerHTML = states.map(state => `
+                <div class="state-card" style="border-left-color: ${state.color};">
+                    <div class="state-icon">${state.icon}</div>
+                    <div class="state-info">
+                        <div class="state-name" style="color: ${state.color};">${state.name}</div>
+                        <div class="state-description">${state.description}</div>
+                    </div>
+                    <div class="state-bonus" style="color: ${state.color};">
+                        ${state.bonus > 0 ? '+' : ''}${state.bonus}分
+                    </div>
+                </div>
+            `).join('');
+
+            specialSection.classList.remove('hidden');
+        }
+
+        // 显示得分详情
+        function displayScoreBreakdown() {
+            const container = document.getElementById('scoreBreakdown');
+            let baseScore = 0;
+            let bonusScore = 0;
+
+            // 计算基础分数
+            userAnswers.forEach(answer => {
+                baseScore += answer.score;
+            });
+
+            // 计算特殊状态奖励分数
+            const states = analyzeSpecialStates();
+            states.forEach(state => {
+                bonusScore += state.bonus * state.count;
+            });
+
+            const totalScore = baseScore + bonusScore;
+
+            let breakdown = `
+                <div class="score-item">
+                    <span>基础答题得分</span>
+                    <span>${baseScore.toLocaleString('zh-CN')}￥</span>
+                </div>
+            `;
+
+            // 显示特殊值
+            if (sigma > 0) {
+                breakdown += `
+                    <div class="score-item">
+                        <span>Sigma值</span>
+                        <span>${sigma}点</span>
+                    </div>
+                `;
+            }
+
+            if (firstsin > 0) {
+                breakdown += `
+                    <div class="score-item">
+                        <span>Firstsin值</span>
+                        <span>${firstsin}点</span>
+                    </div>
+                `;
+            }
+
+            if (bonusScore !== 0) {
+                breakdown += `
+                    <div class="score-item">
+                        <span>特殊状态奖励</span>
+                        <span>${bonusScore > 0 ? '+' : ''}${bonusScore.toLocaleString('zh-CN')}￥</span>
+                    </div>
+                `;
+            }
+
+            breakdown += `
+                <div class="score-item">
+                    <span>最终彩礼价格</span>
+                    <span>${totalScore.toLocaleString('zh-CN')}￥</span>
+                </div>
+            `;
+
+            container.innerHTML = breakdown;
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('load', initResults);
+    </script>
+</body>
+</html>
