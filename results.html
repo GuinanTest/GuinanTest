@@ -308,7 +308,7 @@
             <div id="resultContainer" class="hidden">
                 <div class="result-header">
                     <div class="final-score" id="finalScore">0</div>
-                    <p>你的最终得分</p>
+                    <p>你的基础彩礼价格</p>
                 </div>
 
                 <div id="resultCard" class="result-card">
@@ -431,6 +431,14 @@
                     color: '#4CAF50',
                     traits: ['完成测试', '表现正常', '有待提升', '继续努力']
                 },
+                'Ligong': {
+                    name: '力工结局',
+                    titleIcon: '💰',
+                    description: '你的彩礼价格突破了100万大关！还是先好好爱自己吧！',
+                    icon: '💪',
+                    color: '#FFD700',
+                    traits: ['繁殖', '繁殖', '力工称号']
+                },
                 'guiman': {
                     name: '龟男结局',
                     titleIcon: '🐢',
@@ -506,7 +514,7 @@
         // 显示得分详情
         function displayScoreBreakdown() {
             const container = document.getElementById('scoreBreakdown');
-            let baseScore = 0;
+            let baseScore = 188888;
             let bonusScore = 0;
 
             // 计算基础分数

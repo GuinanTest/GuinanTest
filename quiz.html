@@ -399,6 +399,17 @@
                 return;
             }
 
+            else if(currentScore >= 1000000) {
+                // 力工结局 - 彩礼价格破百万
+                localStorage.setItem('testScore', currentScore);
+                localStorage.setItem('userAnswers', JSON.stringify(userAnswers));
+                localStorage.setItem('sigma', sigma);
+                localStorage.setItem('firstsin', firstsin);
+                localStorage.setItem('endingType', 'Ligong');
+                window.location.href = 'results.html';
+                return;
+            }
+
             else if (firstsin >= 100) {
                 // 龟男结局
                 localStorage.setItem('testScore', currentScore);
@@ -587,7 +598,10 @@
         function checkSpecialEndingTrigger() {
             const nextBtn = document.getElementById('nextBtn');
             
-            if (sigma >= 100) {
+            if (currentScore >= 1000000) {
+                nextBtn.textContent = '查看力工结局 💰';
+                nextBtn.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)';
+            } else if (sigma >= 100) {
                 // Sigma结局：彩礼价格重置为0
                 currentScore = 0;
                 updateScoreDisplay();
